@@ -39,25 +39,32 @@ app.get('/', (c) => {
 app.post('/create', async (c) => {
   const {title,deadline} = await c.req.json<{
     title: string
-    deadline: Date
+    deadline: string
   }>();
   const tasksMaxNum = taskLists.length
   const now = new Date();
   const newTask:Task = { 
-    id : tasksMaxNum+1 , 
-    title : "taskName",
+    id :  uuidv4(), 
+    title : title,
     timestamp: new Date(),
-    deadline: new Date(2025, 9, 20)
+    deadline: new Date(deadline)
   }
   taskLists.push(newTask);
   // return c.text(String(tasksMaxNum))
   console.log(title, deadline)
   return c.json(taskLists)
 })
-app.get('/read', (c) => c.json({tasks: taskLists}));
-app.get('/update', (c) => {
+app.post('/update', async (c) => {
+  const {id, title, deadline} = await c.req.json<{
+    id: string
+    title: string
+    deadline: Date
+  }>();
   return c.text('Hello Hono!')
 })
+app.get('/read', (c) => {
+  return c.json({tasks: taskLists})
+});
 app.get('/delete', (c) => {
   return c.text('Hello Hono!')
 })
