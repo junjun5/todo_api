@@ -54,13 +54,20 @@ app.post('/create', async (c) => {
   console.log(title, deadline)
   return c.json(taskLists)
 })
-app.post('/update', async (c) => {
-  const {id, title, deadline} = await c.req.json<{
-    id: string
+app.post('/update/:id', async (c) => {
+  const id = c.req.param("id");
+  console.log(id)
+  const index = taskLists.findIndex((p) => p.id === id);
+  if(index === -1){
+    console.log('bad request')
+    return c.json({message: "Post not found"}, 400);
+  }
+  const {title, deadline} = await c.req.json<{
     title: string
     deadline: Date
   }>();
-  return c.text('Hello Hono!')
+  taskLists[index] = { ...taskLists[index], title, deadline};
+  return c.json("Completed")
 })
 app.get('/read', (c) => {
   return c.json({tasks: taskLists})
