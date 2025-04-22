@@ -1,0 +1,100 @@
+openapi: "3.0.3"
+
+info:
+  title: "Homework TODO API"
+  version: "1.0.0"
+  description: "このAPIはTODOの操作をするAPIを提供します"
+  termsOfService: "http://hoge/terms"
+  contact:
+    name: "API support desk"
+    url: "http://hoge/support"
+    email: "support@hoge.com"
+servers:
+  - url: "http://localhost:3000"
+    description: "Dev Server"
+tags:
+  - name: "Item"
+    description: "Related task operation, including 4 actions, create, read, update, delete"
+paths:
+  /create:
+    post:
+      summary: "Create a task"
+      description: "Create a task, which is already attached to user"
+      tags: ["Item"]
+      deprecated: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: "Task name"
+                deadline:
+                  type: string
+                  description: "Task deadline"
+            example:
+              title: "hoge"
+              deadline: "2025, 2, 19"
+      responses:
+        "201":
+          description: "Success, Create a Task"
+        "400":
+          description: "Failed, invalid request"
+  /update/{id}:
+    post:
+      summary: "Update a task"
+      description: "Update a existing task"
+      tags: ["Item"]
+      deprecated: false
+      parameters:
+        - name: including
+          in: path
+          required: true
+          description: "itemId which is the target task's id"
+          schema: { type: string, example: "73f2ef80-cb4c-4eb0-82e1-cc51edc29f2f"}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: "Task name"
+                deadline:
+                  type: string
+                  description: "Task deadline"
+            example:
+              title: "huga"
+              deadline: "2025, 3,19"
+      responses:
+        "201": 
+          description: "Success, Update a task"
+        "400":
+          description: "Failed, invalid request"
+  /read:
+    get:
+      summary: "Get tasks"
+      description: "Get the existing tasks"
+      tags: ["Item"]
+      deprecated: false
+      responses:
+        "200":
+          description: "Success, get tasks"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    description: "Task name"
+                  deadline:
+                    type: string
+                    description: "Task name"
+        "400":
+          description: "Failed, invalid request"
